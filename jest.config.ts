@@ -1,15 +1,16 @@
-import type { Config } from 'jest';
-// import type { JestConfigWithTsJest } from 'ts-jest';
+import type { Config } from '@jest/types';
 
-const config: Config = {
-  preset: 'ts-jest',
-  collectCoverage: true,
-  coverageDirectory: 'coverage',
-  coverageProvider: 'v8',
+// Sync object
+const config: Config.InitialOptions = {
+  verbose: true,
+  testEnvironment: 'jsdom',
+  transform: {
+    '\\.jsx?$': 'babel-jest',
+    '^.+\\.tsx?$': 'ts-jest',
+    '.+\\.(css|styl|less|sass|scss)$': 'jest-css-modules-transform'
+  },
   moduleNameMapper: {
-    '^@api$': '<rootDir>/src/utils/burger-api.ts',
-    '^@utils-types$': '<rootDir>/src/utils/types.ts'
+    '\\.(css|less|scss)$': 'jest-css-modules-transform'
   }
 };
-
 export default config;
