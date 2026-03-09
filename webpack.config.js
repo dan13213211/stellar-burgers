@@ -1,7 +1,6 @@
 const path = require('path');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   entry: path.resolve(__dirname, './src/index.tsx'),
@@ -49,12 +48,11 @@ module.exports = {
   },
   plugins: [
     new ESLintPlugin({
-      extensions: ['.js', '.jsx', '.ts', '.tsx']
+      extensions: ['.js', '.jsx', 'ts', 'tsx']
     }),
     new HtmlWebpackPlugin({
-      template: './public/index.html'
-    }),
-    new Dotenv()
+      template: './src/index.html'
+    })
   ],
   resolve: {
     extensions: [
@@ -69,27 +67,15 @@ module.exports = {
       '.png',
       '.svg',
       '.jpg'
-    ],
-    alias: {
-      '@pages': path.resolve(__dirname, './src/pages'),
-      '@components': path.resolve(__dirname, './src/components'),
-      '@ui': path.resolve(__dirname, './src/components/ui'),
-      '@ui-pages': path.resolve(__dirname, './src/components/ui/pages'),
-      '@utils-types': path.resolve(__dirname, './src/utils/types'),
-      '@api': path.resolve(__dirname, './src/utils/burger-api.ts'),
-      '@slices': path.resolve(__dirname, './src/services/slices'),
-      '@selectors': path.resolve(__dirname, './src/services/selectors')
-    }
+    ]
   },
   output: {
     path: path.resolve(__dirname, './dist'),
-    filename: 'bundle.js',
-    publicPath: '/'
+    filename: 'bundle.js'
   },
   devServer: {
     static: path.join(__dirname, './dist'),
     compress: true,
-    historyApiFallback: true,
     port: 4000
   }
 };
