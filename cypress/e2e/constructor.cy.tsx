@@ -1,6 +1,22 @@
 /// <reference types="cypress" />
 
 describe('Интеграционные тесты для страницы конструктора бургера:', () => {
+  const SELECTORS = {
+    ingredientBun: '[data-cy=ingredient-bun]',
+    ingredientMain: '[data-cy=ingredient-main]',
+    ingredientButton: 'button',
+    ingredientName: 'p:last',
+    constructorBunTop: '[data-cy=constructor-bun-top]',
+    constructorBunBottom: '[data-cy=constructor-bun-bottom]',
+    constructorIngredient: '[data-cy=constructor-ingredient]',
+    orderButton: '[data-cy=order-button]',
+    ingredientModal: '[data-cy=ingredient-modal]',
+    orderModal: '[data-cy=order-modal]',
+    modalClose: '[data-cy=modal-close]',
+    modalOverlay: '[data-cy=modal-overlay]',
+    orderNumber: '[data-cy=order-number]'
+  } as const;
+
   beforeEach(() => {
     // Перехватываем запрос ингредиентов до загрузки страницы и возвращаем фикстуры
     cy.intercept('GET', '**/api/ingredients', {
@@ -42,64 +58,81 @@ describe('Интеграционные тесты для страницы кон
   });
 
   it('Добавляет булку и начинку в конструктор', () => {
-    cy.get('[data-cy=ingredient-bun]').first().find('button').click(); // компонент: BurgerIngredientUI, клик на кнопку добавления булки
-    cy.get('[data-cy=constructor-bun-top]').should('exist'); // компонент: BurgerConstructorUI, проверка верхней булки в конструкторе
-    cy.get('[data-cy=constructor-bun-bottom]').should('exist'); // компонент: BurgerConstructorUI, проверка нижней булки в конструкторе
+    // Добавление булки
+    cy.get(SELECTORS.ingredientBun)
+      .first()
+      .find(SELECTORS.ingredientButton)
+      .click();
 
-    cy.get('[data-cy=ingredient-main]').first().find('button').click(); // компонент: BurgerIngredientUI, клик на кнопку добавления начинки
-    cy.get('[data-cy=constructor-ingredient]').should('have.length', 1); // компонент: BurgerConstructorElementUI, проверка начинки в конструкторе
+    // Проверка булок в конструкторе
+    cy.get(SELECTORS.constructorBunTop).should('exist');
+    cy.get(SELECTORS.constructorBunBottom).should('exist');
+
+    // Добавление начинки
+    cy.get(SELECTORS.ingredientMain)
+      .first()
+      .find(SELECTORS.ingredientButton)
+      .click();
+
+    // Проверка начинки в конструкторе
+    cy.get(SELECTORS.constructorIngredient).should('have.length', 1);
   });
 
   it('Открытие и закрытие модального окна ингредиента', () => {
     // Запоминаем название ингредиента перед кликом
-    cy.get('[data-cy=ingredient-main]')
+    cy.get(SELECTORS.ingredientMain)
       .first()
-      .find('p')
-      .last()
+      .find(SELECTORS.ingredientName)
       .invoke('text')
       .as('expectedName');
 
     // Открываем модалку ингредиента
-    cy.get('[data-cy=ingredient-main]').first().click();
-    cy.get('[data-cy=ingredient-modal]').should('exist');
+    cy.get(SELECTORS.ingredientMain).first().click();
+    cy.get(SELECTORS.ingredientModal).should('exist');
 
     // Проверяем что в модалке отображается название того же ингредиента
     cy.get('@expectedName').then((name) => {
-      cy.get('[data-cy=ingredient-modal]').should('contain', name);
+      cy.get(SELECTORS.ingredientModal).should('contain', name);
     });
 
     // Закрытие крестиком
-    cy.get('[data-cy=modal-close]').click();
-    cy.get('[data-cy=ingredient-modal]').should('not.exist');
+    cy.get(SELECTORS.modalClose).click();
+    cy.get(SELECTORS.ingredientModal).should('not.exist');
 
     // Открываем снова и закрываем оверлеем
-    cy.get('[data-cy=ingredient-main]').first().click();
-    cy.get('[data-cy=modal-overlay]').click({ force: true });
-    cy.get('[data-cy=ingredient-modal]').should('not.exist');
+    cy.get(SELECTORS.ingredientMain).first().click();
+    cy.get(SELECTORS.modalOverlay).click({ force: true });
+    cy.get(SELECTORS.ingredientModal).should('not.exist');
   });
 
   it('Создание заказа', () => {
     // Добавляем булку
-    cy.get('[data-cy=ingredient-bun]').first().find('button').click();
+    cy.get(SELECTORS.ingredientBun)
+      .first()
+      .find(SELECTORS.ingredientButton)
+      .click();
 
     // Добавляем начинку
-    cy.get('[data-cy=ingredient-main]').first().find('button').click();
+    cy.get(SELECTORS.ingredientMain)
+      .first()
+      .find(SELECTORS.ingredientButton)
+      .click();
 
     // Оформляем заказ
-    cy.get('[data-cy=order-button]').click();
+    cy.get(SELECTORS.orderButton).click();
 
     // Проверяем открытие модального окна заказа и номер
     cy.wait('@createOrder');
-    cy.get('[data-cy=order-modal]').should('exist');
-    cy.get('[data-cy=order-number]').should('contain.text', '92846'); // номер из фикстуры
+    cy.get(SELECTORS.orderModal).should('exist');
+    cy.get(SELECTORS.orderNumber).should('contain.text', '92846'); // номер из фикстуры
 
     // Закрываем модалку
-    cy.get('[data-cy=modal-close]').click();
-    cy.get('[data-cy=order-modal]').should('not.exist');
+    cy.get(SELECTORS.modalClose).click();
+    cy.get(SELECTORS.orderModal).should('not.exist');
 
     // Конструктор должен быть пуст
-    cy.get('[data-cy=constructor-bun-top]').should('not.exist');
-    cy.get('[data-cy=constructor-ingredient]').should('not.exist');
-    cy.get('[data-cy=constructor-bun-bottom]').should('not.exist');
+    cy.get(SELECTORS.constructorBunTop).should('not.exist');
+    cy.get(SELECTORS.constructorIngredient).should('not.exist');
+    cy.get(SELECTORS.constructorBunBottom).should('not.exist');
   });
 });
