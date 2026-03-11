@@ -2,7 +2,8 @@ import constructorReducer, {
   addToConstructor,
   removeFromConstructor,
   reorderConstructor,
-  resetConstructor
+  resetConstructor,
+  initialState
 } from './constructorSlice';
 import { TIngredient } from '@utils-types';
 
@@ -16,11 +17,6 @@ jest.mock('@reduxjs/toolkit', () => {
 });
 
 describe('burgerConstructor slice', () => {
-  const initialState = {
-    bun: null,
-    ingredients: []
-  };
-
   const bunIngredient: TIngredient = {
     _id: 'bun1',
     name: 'Булка',

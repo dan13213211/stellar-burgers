@@ -5,6 +5,13 @@ jest.mock('../../../utils/cookie', () => ({
   deleteCookie: jest.fn()
 }));
 
+// Мокаем getCookie
+jest.mock('../../../utils/cookie', () => ({
+  getCookie: jest.fn(() => null),
+  setCookie: jest.fn(),
+  deleteCookie: jest.fn()
+}));
+
 // Мокаем localStorage
 const localStorageMock = {
   getItem: jest.fn(),
@@ -15,6 +22,7 @@ const localStorageMock = {
 Object.defineProperty(global, 'localStorage', { value: localStorageMock });
 
 import userReducer, {
+  initialState,
   registerUser,
   loginUser,
   fetchUser,
@@ -26,15 +34,6 @@ import userReducer, {
 import { TUser } from '@utils-types';
 
 describe('userSlice', () => {
-  const initialState = {
-    user: null,
-    accessToken: null,
-    refreshToken: null,
-    isAuthChecked: false,
-    isLoading: false,
-    error: null
-  };
-
   it('должен возвращать начальное состояние', () => {
     expect(userReducer(undefined, { type: '' })).toEqual(initialState);
   });

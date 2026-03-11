@@ -10,7 +10,7 @@ export type ProfileOrdersState = {
   currentOrder: TOrder | null;
 };
 
-const initialState: ProfileOrdersState = {
+export const initialState: ProfileOrdersState = {
   orders: [],
   isLoading: false,
   error: null,

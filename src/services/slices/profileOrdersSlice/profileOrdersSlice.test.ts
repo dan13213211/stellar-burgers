@@ -1,18 +1,11 @@
 import profileOrdersReducer, {
   fetchProfileOrders,
   fetchProfileOrderByNumber,
-  ProfileOrdersState
+  initialState
 } from './profileOrdersSlice';
 import { TOrder } from '@utils-types';
 
 describe('profileOrdersSlice', () => {
-  const initialState: ProfileOrdersState = {
-    orders: [],
-    isLoading: false,
-    error: null,
-    currentOrder: null
-  };
-
   it('должен возвращать начальное состояние', () => {
     expect(profileOrdersReducer(undefined, { type: '' })).toEqual(initialState);
   });

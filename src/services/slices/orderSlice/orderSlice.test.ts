@@ -1,18 +1,12 @@
 import orderReducer, {
   createOrder,
   fetchOrderByNumber,
-  closeOrderModal
+  closeOrderModal,
+  initialState
 } from './orderSlice';
 import { TOrder } from '@utils-types';
 
 describe('orderSlice', () => {
-  const initialState = {
-    currentOrder: null as TOrder | null,
-    orderNumber: null as number | null,
-    isOrderLoading: false,
-    error: null as string | null
-  };
-
   it('должен возвращать начальное состояние', () => {
     expect(orderReducer(undefined, { type: '' })).toEqual(initialState);
   });

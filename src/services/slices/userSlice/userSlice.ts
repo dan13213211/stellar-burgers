@@ -21,7 +21,7 @@ interface IUserState {
   error?: string | null;
 }
 
-const initialState: IUserState = {
+export const initialState: IUserState = {
   user: null,
   accessToken: getCookie('accessToken') || null,
   refreshToken: localStorage.getItem('refreshToken') || null,
