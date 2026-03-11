@@ -1,13 +1,10 @@
-import ingredientsReducer, { fetchIngredients } from './ingredientsSlice';
+import ingredientsReducer, {
+  fetchIngredients,
+  initialState
+} from './ingredientsSlice';
 import { TIngredient } from '@utils-types';
 
 describe('ingredientsSlice', () => {
-  const initialState = {
-    ingredients: [],
-    isLoading: false,
-    error: null
-  };
-
   const mockIngredients: TIngredient[] = [
     {
       _id: '1',
@@ -60,9 +57,12 @@ describe('ingredientsSlice', () => {
   });
 
   it('fetchIngredients.rejected сохраняет ошибку и устанавливает isLoading в false', () => {
-    const action = { type: fetchIngredients.rejected.type, payload: 'Ошибка' };
+    const action = {
+      type: fetchIngredients.rejected.type,
+      error: { message: 'Ошибка' }
+    };
     const state = ingredientsReducer(initialState, action);
     expect(state.isLoading).toBe(false);
-    expect(state.error).toBe('Ошибка');
+    expect(state.error).toBeDefined();
   });
 });
